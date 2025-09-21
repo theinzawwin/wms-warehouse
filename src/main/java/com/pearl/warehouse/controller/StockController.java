@@ -1,6 +1,7 @@
 package com.pearl.warehouse.controller;
 
 import com.pearl.warehouse.dto.input.StockInput;
+import com.pearl.warehouse.dto.response.StockResponse;
 import com.pearl.warehouse.model.Stock;
 import com.pearl.warehouse.service.StockService;
 import jakarta.validation.Valid;
@@ -8,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/stock")
@@ -25,5 +28,9 @@ public class StockController {
     @PostMapping("/save")
     public ResponseEntity<Stock> saveStock(@Valid @RequestBody StockInput stockInput){
         return ResponseEntity.ok(stockService.saveStock(stockInput));
+    }
+    @GetMapping("/list-stock")
+    public ResponseEntity<List<StockResponse>> getAllStocks(){
+        return ResponseEntity.ok(stockService.getAllStocks());
     }
 }

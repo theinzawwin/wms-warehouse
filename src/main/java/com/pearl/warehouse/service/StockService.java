@@ -1,11 +1,14 @@
 package com.pearl.warehouse.service;
 
 import com.pearl.warehouse.dto.input.StockInput;
+import com.pearl.warehouse.dto.response.StockResponse;
 import com.pearl.warehouse.mapper.StockMapper;
 import com.pearl.warehouse.model.Stock;
 import com.pearl.warehouse.repository.StockRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class StockService {
@@ -22,5 +25,9 @@ public class StockService {
         Stock stock = stockMapper.toEntity(stockInput);
         Stock stockCreated=stockRepository.save(stock);
         return stockCreated;
+    }
+
+    public List<StockResponse> getAllStocks(){
+        return this.stockRepository.findAllStocksWithProductDetails();
     }
 }

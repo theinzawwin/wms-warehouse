@@ -6,6 +6,7 @@ import com.pearl.warehouse.model.Category;
 import com.pearl.warehouse.model.Product;
 import com.pearl.warehouse.repository.CategoryRepository;
 import com.pearl.warehouse.repository.ProductRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
@@ -58,4 +59,25 @@ public class ProductService {
         productRepository.deleteById(id);
         return true;
     }
+
+    public Optional<Product> findByProductName(String productName){
+        return productRepository.findByProductNameContaining(productName);
+    }
+
+    public List<Product> findProductsByCategoryName(Integer categoryId,String productName){
+        return productRepository.findByProductNameAndCategoryId(categoryId,productName);
+    }
+
+    @Transactional
+    public boolean updateProductCode(Long productId,String code){
+        int resultCount =productRepository.updateProductCode(code,productId);
+        return resultCount > 0;
+    }
+
+    @Transactional
+    public boolean deleteProductCode(String code){
+       productRepository.deleteProductByCode(code);
+        return true;
+    }
+
 }

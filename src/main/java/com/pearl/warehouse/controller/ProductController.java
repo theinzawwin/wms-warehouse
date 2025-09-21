@@ -31,9 +31,22 @@ public class ProductController {
         return productService.getAllProducts();
     }
 
-    @GetMapping("{id}")
+    @GetMapping("{id}/product-detail")
     public Optional<Product> getProductById(@PathVariable(value="id") Integer id){
         return productService.findById(id);
+    }
+
+    @GetMapping("/findByName")
+    public Optional<Product> getProductByName(@RequestParam(value="productName") String productName){
+        return productService.findByProductName(productName);
+    }
+    @GetMapping("{productId}/updateCode")
+    public ResponseEntity<Boolean> updateProductCode(@PathVariable("productId")Long productId,@RequestParam("code") String productCode){
+        return ResponseEntity.ok(productService.updateProductCode(productId,productCode));
+    }
+    @GetMapping("/get-products-by-categoryName")
+    public List<Product> getProductsByCategoryName(@RequestParam(value="categoryId") Integer categoryId, @RequestParam(value="productName")String productName){
+        return productService.findProductsByCategoryName(categoryId, productName);
     }
 
 
@@ -49,5 +62,9 @@ public class ProductController {
     @DeleteMapping("/delete/{id}")
     public Boolean deleteProduct(@PathVariable Integer id){
         return productService.deleteById(id);
+    }
+    @DeleteMapping("/deleteByCode/{code}")
+    public Boolean deleteProductByCode(@PathVariable String code){
+        return productService.deleteProductCode(code);
     }
 }

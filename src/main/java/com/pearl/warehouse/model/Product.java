@@ -14,19 +14,20 @@ import lombok.Setter;
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer productId;
+    private Long productId;
     private String productName;
     private String code;
+    private Boolean status;
     @ManyToOne
     @JoinColumn(name = "category_id")
     @JsonBackReference
     private Category category;
 
-    public Integer getProductId() {
+    public Long getProductId() {
         return productId;
     }
 
-    public void setProductId(Integer productId) {
+    public void setProductId(Long productId) {
         this.productId = productId;
     }
 
@@ -56,7 +57,7 @@ public class Product {
     public Product(){
 
     }
-    public Product(Integer productId, String productName, String code,Category category){
+    public Product(Long productId, String productName, String code,Category category){
         this.productId = productId;
         this.productName = productName;
         this.code= code;

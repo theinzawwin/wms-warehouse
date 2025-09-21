@@ -24,7 +24,7 @@ public class StockController {
         return "stock list";
     }
 
-    @PreAuthorize("hasAuthority('USER')")
+    //@PreAuthorize("hasAuthority('USER')")
     @PostMapping("/save")
     public ResponseEntity<Stock> saveStock(@Valid @RequestBody StockInput stockInput){
         return ResponseEntity.ok(stockService.saveStock(stockInput));

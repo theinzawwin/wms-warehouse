@@ -18,6 +18,7 @@ public class Product {
     private String productName;
     private String code;
     private Boolean status;
+    private boolean expireStatus;
     @ManyToOne
     @JoinColumn(name = "category_id")
     @JsonBackReference
@@ -57,10 +58,11 @@ public class Product {
     public Product(){
 
     }
-    public Product(Long productId, String productName, String code,Category category){
+    public Product(Long productId, String productName, String code, boolean expireStatus, Category category){
         this.productId = productId;
         this.productName = productName;
         this.code= code;
+        this.expireStatus = expireStatus;
         this.category = category;
     }
 }

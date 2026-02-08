@@ -1,24 +1,39 @@
 package com.pearl.warehouse.service;
 
 import com.pearl.warehouse.dto.input.ProductInput;
+import com.pearl.warehouse.dto.response.ProductResponse;
 import com.pearl.warehouse.exceptions.NameDuplicateException;
+import com.pearl.warehouse.mapper.ProductMapper;
 import com.pearl.warehouse.model.Category;
 import com.pearl.warehouse.model.Product;
 import com.pearl.warehouse.repository.CategoryRepository;
 import com.pearl.warehouse.repository.ProductRepository;
+import com.pearl.warehouse.repository.specification.ProductSpecification;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.rmi.NotBoundException;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class ProductService {
+
+    private static final Set<String> ALLOWED_SORT_FIELDS = Set.of(
+            "productId", "productName", "code", "status"
+    );
     @Autowired
     private ProductRepository productRepository;
+    @Autowired
+    private ProductMapper productMapper;
 
     @Autowired
     private CategoryRepository categoryRepository;
@@ -78,6 +93,31 @@ public class ProductService {
     public boolean deleteProductCode(String code){
        productRepository.deleteProductByCode(code);
         return true;
+    }
+
+    public Page<ProductResponse> getProducts(
+            int page,
+            int size,
+            String search,
+            String sortBy,
+            String direction) {
+
+        if (!ALLOWED_SORT_FIELDS.contains(sortBy)) {
+            sortBy = "productId";
+        }
+
+        Sort sort = "DESC".equalsIgnoreCase(direction)
+                ? Sort.by(sortBy).descending()
+                : Sort.by(sortBy).ascending();
+
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        Specification<Product> spec = ProductSpecification.search(search);
+
+        Page<Product> productPage =
+                productRepository.findAll(spec, pageable);
+
+        return productPage.map(productMapper::toResponse);
     }
 
 }

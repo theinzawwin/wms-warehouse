@@ -1,10 +1,14 @@
 package com.pearl.warehouse.controller;
 
 import com.pearl.warehouse.dto.ProductDto;
+import com.pearl.warehouse.dto.api.ApiResponse;
+import com.pearl.warehouse.dto.api.Pagination;
 import com.pearl.warehouse.dto.input.ProductInput;
+import com.pearl.warehouse.dto.response.ProductResponse;
 import com.pearl.warehouse.model.Product;
 import com.pearl.warehouse.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,7 +40,7 @@ public class ProductController {
         return productService.findById(id);
     }
 
-    @GetMapping("/findByName")
+    @GetMapping("/find-by-name")
     public Optional<Product> getProductByName(@RequestParam(value="productName") String productName){
         return productService.findByProductName(productName);
     }
@@ -66,5 +70,33 @@ public class ProductController {
     @DeleteMapping("/deleteByCode/{code}")
     public Boolean deleteProductByCode(@PathVariable String code){
         return productService.deleteProductCode(code);
+    }
+
+    @GetMapping
+    public ResponseEntity<ApiResponse<List<ProductResponse>>> getProducts(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) String search,
+            @RequestParam(defaultValue = "productId") String sortBy,
+            @RequestParam(defaultValue = "DESC") String direction) {
+
+        Page<ProductResponse> productPage =
+                productService.getProducts(page, size, search, sortBy, direction);
+        Pagination pagination = new Pagination(
+                productPage.getNumber(),
+                productPage.getSize(),
+                productPage.getTotalElements(),
+                productPage.getTotalPages(),
+                productPage.isLast()
+        );
+
+        ApiResponse<List<ProductResponse>> response =
+                ApiResponse.success(
+                        productPage.getContent(),
+                        "Products fetched successfully"
+                );
+        response.setPagination(pagination);
+
+        return ResponseEntity.ok(response);
     }
 }

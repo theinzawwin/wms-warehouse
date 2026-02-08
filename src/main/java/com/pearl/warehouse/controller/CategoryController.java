@@ -4,6 +4,7 @@ import com.pearl.warehouse.dto.input.CategoryInput;
 import com.pearl.warehouse.dto.input.CategoryWithProducts;
 import com.pearl.warehouse.model.Category;
 import com.pearl.warehouse.service.CategoryService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,16 +23,17 @@ public class CategoryController {
         return categoryService.saveCategory(categoryInput);
     }
 
-    @PostMapping("/saveWithProducts")
-    public Category saveCategoryWithProducts(@RequestBody CategoryWithProducts categoryInput){
+    @PostMapping("/save-with-products")
+    public Category saveCategoryWithProducts(@Valid @RequestBody CategoryWithProducts categoryInput){
         return categoryService.saveCategoryWithProducts(categoryInput);
     }
 
     @GetMapping("/list")
-    public List<Category> getAllCategories(){
+    public List<Category> getAllCategories(@RequestParam("search")String search,@RequestParam(defaultValue = "0") int page,
+                                           @RequestParam(defaultValue = "10") int size, @RequestParam String sortBy, @RequestParam String orderBy){
         return categoryService.getAllCategory();
     }
-    @GetMapping("{id}")
+    @GetMapping("/detail/{id}")
     public Optional<Category> findById(@PathVariable(value = "id") Integer id){
         return categoryService.findById(id);
     }

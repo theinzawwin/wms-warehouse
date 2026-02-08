@@ -34,7 +34,7 @@ public class CategoryService {
         if(!categoryInput.products().isEmpty()){
             productList = new ArrayList<>();
             categoryInput.products().forEach(p->{
-                productList.add(new Product(p.id(),p.productName(),p.code(),category));
+                productList.add(new Product(p.id(),p.productName(),p.code(),p.expireStatus(),category));
             });
             category.setProductList(productList);
         }

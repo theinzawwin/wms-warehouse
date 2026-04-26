@@ -52,7 +52,7 @@ public class SecurityConfig {
                                 "/api-docs/**"
                         ).permitAll()
                         .requestMatchers("/auth/login").permitAll()
-                        .requestMatchers("/api/**").authenticated()
+                       .requestMatchers("/api/users/**").permitAll()
                         .requestMatchers("/categories/**").permitAll()//.hasAuthority("USER")
                         //.requestMatchers("/products/**").hasAuthority("ADMIN")
                         .requestMatchers("/products/**").permitAll()

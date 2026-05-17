@@ -29,8 +29,8 @@ public class CategoryController {
     }
 
     @GetMapping("/list")
-    public List<Category> getAllCategories(@RequestParam("search")String search,@RequestParam(defaultValue = "0") int page,
-                                           @RequestParam(defaultValue = "10") int size, @RequestParam String sortBy, @RequestParam String orderBy){
+    public List<Category> getAllCategories(@RequestParam(value = "search",defaultValue = "")String search,@RequestParam(defaultValue = "0") int page,
+                                           @RequestParam(defaultValue = "10") int size, @RequestParam(defaultValue = "") String sortBy, @RequestParam(defaultValue = "") String orderBy){
         return categoryService.getAllCategory();
     }
     @GetMapping("/detail/{id}")
